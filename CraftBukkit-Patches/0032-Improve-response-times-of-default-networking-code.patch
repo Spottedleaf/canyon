@@ -1,0 +1,167 @@
+From 25c26658f32deb4c44eebbf390f29dd2c45f8b5f Mon Sep 17 00:00:00 2001
+From: Spottedleaf <Spottedleaf@users.noreply.github.com>
+Date: Mon, 15 Jan 2024 03:45:32 -0800
+Subject: [PATCH] Improve response times of default networking code
+
+The reader thread does not need to be sleeping at all, it can
+just block on the next input read. Any socket close activity
+will interrupt the read, which is already handled by the packet
+read function. As a result, this eliminates extra input latency
+imposed by the reader thread.
+
+The writer thread does not wake up when a packet is ready to
+write, which can add up to 100ms of write delay. Additionally,
+the packets are only flushed after the sleep delay which doesn't
+help. Rewrite the sleep logic so that any packet writes into the
+writer will wake it from sleep and move the flush() logic to occur
+directly after draining the packet queue.
+
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index e393ad56..f185b4e2 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -26,7 +26,7 @@ public class NetworkManager {
+     private List lowPriorityQueue = Collections.synchronizedList(new ArrayList());
+     public NetHandler p; // Canyon - private -> public
+     private boolean q = false;
+-    private Thread r;
++    private Thread r; private NetworkWriterThread getWriteThread() { return (NetworkWriterThread)this.r; } // Canyon - OBFHELPER
+     private Thread s;
+     private boolean t = false;
+     private String u = "";
+@@ -93,6 +93,7 @@ public class NetworkManager {
+                     this.highPriorityQueue.add(packet);
+                 }
+             }
++            this.getWriteThread().wakeup(); // Canyon - improve default networking
+         }
+     }
+ 
+@@ -194,6 +195,7 @@ public class NetworkManager {
+             // Canyon end
+             (new NetworkMasterThread(this)).start();
+             this.l = false;
++            this.getWriteThread().wakeup(); // Canyon - improve default networking - force wakeup of writer thread
+ 
+             try {
+                 this.input.close();
+diff --git a/src/main/java/net/minecraft/server/NetworkReaderThread.java b/src/main/java/net/minecraft/server/NetworkReaderThread.java
+index 1f7ae82e..0b866562 100644
+--- a/src/main/java/net/minecraft/server/NetworkReaderThread.java
++++ b/src/main/java/net/minecraft/server/NetworkReaderThread.java
+@@ -31,15 +31,7 @@ class NetworkReaderThread extends Thread {
+                     break;
+                 }
+ 
+-                while (NetworkManager.c(this.a)) {
+-                    ;
+-                }
+-
+-                try {
+-                    sleep(100L);
+-                } catch (InterruptedException interruptedexception) {
+-                    ;
+-                }
++                NetworkManager.c(this.a); // Canyon - do not sleep, the code will block on read() for us
+             } finally {
+                 if (flag) {
+                     Object object1 = NetworkManager.a;
+diff --git a/src/main/java/net/minecraft/server/NetworkWriterThread.java b/src/main/java/net/minecraft/server/NetworkWriterThread.java
+index 9f42388f..78f57bd5 100644
+--- a/src/main/java/net/minecraft/server/NetworkWriterThread.java
++++ b/src/main/java/net/minecraft/server/NetworkWriterThread.java
+@@ -11,6 +11,26 @@ class NetworkWriterThread extends Thread {
+         this.a = networkmanager;
+     }
+ 
++    // Canyon start - improve default networking
++    // only sleep for 100ms at a time (old value), in case some plugin isn't correctly calling our wakeup logic
++    private static final long SLEEP_DURATION = java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(100L);
++    private final java.util.concurrent.atomic.AtomicBoolean sleeping = new java.util.concurrent.atomic.AtomicBoolean();
++
++    public void wakeup() {
++        if (this.sleeping.get() && this.sleeping.getAndSet(false)) {
++            java.util.concurrent.locks.LockSupport.unpark(this);
++        }
++    }
++
++    protected boolean shouldQuit() {
++        return !NetworkManager.a(this.a);
++    }
++
++    protected boolean tryDrainPacket() {
++        return NetworkManager.d(this.a);
++    }
++    // Canyon end - improve default networking
++
+     public void run() {
+         Object object = NetworkManager.a;
+ 
+@@ -23,20 +43,16 @@ class NetworkWriterThread extends Thread {
+ 
+             try {
+                 flag = true;
+-                if (!NetworkManager.a(this.a)) {
++                if (this.shouldQuit()) { // Canyon - move into shouldQuit
+                     flag = false;
+                     break;
+                 }
+ 
+-                while (NetworkManager.d(this.a)) {
++                while (this.tryDrainPacket()) { // Canyon - move into tryDrainPacket
+                     ;
+                 }
+ 
+-                try {
+-                    sleep(100L);
+-                } catch (InterruptedException interruptedexception) {
+-                    ;
+-                }
++                // Canyon - move sleep after flush(), so as to not introduce delay
+ 
+                 try {
+                     if (NetworkManager.e(this.a) != null) {
+@@ -49,6 +65,40 @@ class NetworkWriterThread extends Thread {
+ 
+                     ioexception.printStackTrace();
+                 }
++
++                // Canyon start - improve default networking - allow writer thread to wake up
++                long deadline = System.nanoTime() + SLEEP_DURATION;
++                this.sleeping.set(true);
++
++                // try draining packets one more time to deal with race conditions
++                if (this.shouldQuit()) {
++                    // race condition: quit was set while writing packets
++                    this.sleeping.set(false);
++                    continue;
++                }
++
++                if (this.tryDrainPacket()) {
++                    // race condition: packet was added before we set sleeping to true
++                    this.sleeping.set(false);
++                    continue;
++                }
++                while (this.sleeping.get()) {
++                    long currTime = System.nanoTime();
++                    long sleep = deadline - currTime;
++                    if (sleep <= 0L) {
++                        this.sleeping.set(false);
++                        break;
++                    }
++                    boolean interrupted = Thread.interrupted();
++                    java.util.concurrent.locks.LockSupport.parkNanos(sleep);
++                    if (interrupted) {
++                        // respond to interrupt
++                        this.sleeping.set(false);
++                        break;
++                    }
++                }
++                this.sleeping.set(false);
++                // Canyon end - improve default networking - allow writer thread to wake up
+             } finally {
+                 if (flag) {
+                     Object object1 = NetworkManager.a;
+-- 
+2.43.0.windows.1
+

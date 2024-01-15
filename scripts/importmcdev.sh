@@ -45,6 +45,8 @@ import BlockFlowing
 import Packet10Flying
 import ChunkLoader
 import NibbleArray
+import NetworkWriterThread
+import NetworkReaderThread
 
 cd "$basedir/CraftBukkit"
 $gitcmd add . -A >/dev/null 2>&1
