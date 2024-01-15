@@ -217,10 +217,10 @@ index 00000000..0e58eeff
 +}
 diff --git a/src/main/java/com/canyonmodded/network/NettyNetworkManager.java b/src/main/java/com/canyonmodded/network/NettyNetworkManager.java
 new file mode 100644
-index 00000000..fbb9433b
+index 00000000..0fdd777a
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/NettyNetworkManager.java
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,59 @@
 +package com.canyonmodded.network;
 +
 +import io.netty.channel.Channel;
@@ -262,13 +262,15 @@ index 00000000..fbb9433b
 +
 +    @Override
 +    public void queue(Packet packet) {
-+        this.channel.write(packet, this.channel.voidPromise());
 +        if (isUrgentPacket(packet)) {
-+            this.channel.flush();
++            this.channel.writeAndFlush(packet, this.channel.voidPromise());
++        } else {
++            // TODO implement proper support for delaying flush
++            this.channel.writeAndFlush(packet, this.channel.voidPromise());
 +        }
 +    }
 +
-+    private boolean isUrgentPacket(Packet packet) {
++    private static boolean isUrgentPacket(Packet packet) {
 +        return packet instanceof Packet2Handshake || packet instanceof Packet1Login || packet instanceof Packet0KeepAlive
 +                || packet instanceof Packet255KickDisconnect;
 +    }
