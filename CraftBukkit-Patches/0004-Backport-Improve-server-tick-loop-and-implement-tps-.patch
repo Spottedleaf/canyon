@@ -1,4 +1,4 @@
-From 4585b783ae0de34a81e3371249ba98fecafa6594 Mon Sep 17 00:00:00 2001
+From e606cb08b573fc4f0c4942caac3286778327aaad Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 22 Aug 2019 00:38:54 -0400
 Subject: [PATCH] Backport: Improve server tick loop and implement tps api
@@ -13,10 +13,10 @@ allows Canyon to keep track of server TPS, which can be viewed with the
 /tps command.
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 59358fbd..28178ba9 100644
+index 59358fbd..af953dd7 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -63,6 +63,62 @@ public class MinecraftServer implements Runnable, ICommandListener {
+@@ -63,6 +63,87 @@ public class MinecraftServer implements Runnable, ICommandListener {
      public static int currentTick;
      // CraftBukkit end
  
@@ -24,109 +24,231 @@ index 59358fbd..28178ba9 100644
 +    // Sourced from Paper
 +    public static final int TPS = 20;
 +    public static final int TICK_TIME = 1000000000 / TPS;
-+    private static final int SAMPLE_INTERVAL = 20;
 +
-+    private static final long SEC_IN_NANO = 1000000000;
-+    private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;
-+    private long lastTick = 0;
-+    private long catchupTime = 0;
-+    public final RollingAverage tps1 = new RollingAverage(60);
-+    public final RollingAverage tps5 = new RollingAverage(60 * 5);
-+    public final RollingAverage tps15 = new RollingAverage(60 * 15);
++    public static final class TPSTracker {
 +
-+    public static class RollingAverage {
-+        private final int size;
-+        private long time;
-+        private java.math.BigDecimal total;
-+        private int index = 0;
-+        private final java.math.BigDecimal[] samples;
-+        private final long[] times;
++        private final java.util.ArrayDeque<TickRecord> ticks = new java.util.ArrayDeque<>();
++        private final long window;
 +
-+        RollingAverage(int size) {
-+            this.size = size;
-+            this.time = size * SEC_IN_NANO;
-+            this.total = dec(TPS).multiply(dec(SEC_IN_NANO)).multiply(dec(size));
-+            this.samples = new java.math.BigDecimal[size];
-+            this.times = new long[size];
-+            for (int i = 0; i < size; i++) {
-+                this.samples[i] = dec(TPS);
-+                this.times[i] = SEC_IN_NANO;
++        private long sumDuration;
++        private long sumTickToTick;
++
++        public TPSTracker(final long windowNS) {
++            this.window = windowNS;
++        }
++
++        public void addTick(final long tickStart, final long tickEnd) {
++            TickRecord first;
++            while ((first = this.ticks.peekFirst()) != null) {
++                // only remove data completely out of window
++                if ((tickStart - first.tickEnd) <= this.window) {
++                    break;
++                }
++                this.ticks.pollFirst();
++                this.sumDuration -= first.getDuration();
++                this.sumTickToTick -= first.tickToTickDiff;
 +            }
++
++            final TickRecord last = this.ticks.peekLast();
++
++            final long duration = tickEnd - tickStart;
++            final long tickToTickDiff = last != null ? (tickStart - last.tickStart) : (Math.max(TICK_TIME, duration));
++
++            final TickRecord tick = new TickRecord(tickStart, tickEnd, tickToTickDiff);
++
++            this.ticks.addLast(tick);
++            this.sumDuration += duration;
++            this.sumTickToTick += tickToTickDiff;
 +        }
 +
-+        private static java.math.BigDecimal dec(long t) {
-+            return new java.math.BigDecimal(t);
-+        }
-+        public void add(java.math.BigDecimal x, long t) {
-+            time -= times[index];
-+            total = total.subtract(samples[index].multiply(dec(times[index])));
-+            samples[index] = x;
-+            times[index] = t;
-+            time += t;
-+            total = total.add(x.multiply(dec(t)));
-+            if (++index == size) {
-+                index = 0;
++        public double getMSPT() {
++            final int ticks = this.ticks.size();
++            if (ticks == 0) {
++                return 0.0;
 +            }
++
++            return ((double)this.sumDuration / (double)ticks) * (1.0E3 / 1.0E9);
 +        }
 +
-+        public double getAverage() {
-+            return total.divide(dec(time), 30, java.math.RoundingMode.HALF_UP).doubleValue();
++        public double getTps() {
++            final int ticks = this.ticks.size();
++            if (ticks == 0) {
++                return 20.0;
++            }
++
++            return ((double)ticks / (double)this.sumTickToTick) * (1.0E9 / 1.0);
 +        }
 +    }
-+    private static final java.math.BigDecimal TPS_BASE = new java.math.BigDecimal(1E9).multiply(new java.math.BigDecimal(SAMPLE_INTERVAL));
++    public static final class TickRecord {
++        public final long tickStart;
++        public final long tickEnd;
++        public final long tickToTickDiff;
++
++        public TickRecord(final long tickStart, final long tickEnd, final long tickToTickDiff) {
++            this.tickStart = tickStart;
++            this.tickEnd = tickEnd;
++            this.tickToTickDiff = tickToTickDiff;
++        }
++
++        public long getDuration() {
++            return this.tickEnd - this.tickStart;
++        }
++    }
++    public final TPSTracker tps5s = new TPSTracker(java.util.concurrent.TimeUnit.SECONDS.toNanos(5L));
++    public final TPSTracker tps15s = new TPSTracker(java.util.concurrent.TimeUnit.SECONDS.toNanos(15L));
++    public final TPSTracker tps1 = new TPSTracker(java.util.concurrent.TimeUnit.MINUTES.toNanos(1L));
++    public final TPSTracker tps5 = new TPSTracker(java.util.concurrent.TimeUnit.MINUTES.toNanos(5L));
++    public final TPSTracker tps15 = new TPSTracker(java.util.concurrent.TimeUnit.MINUTES.toNanos(15L));
 +    // Canyon end
 +
      public MinecraftServer(OptionSet options) { // CraftBukkit - adds argument OptionSet
          new ThreadSleepForever(this);
  
-@@ -342,8 +398,45 @@ public class MinecraftServer implements Runnable, ICommandListener {
+@@ -339,11 +420,142 @@ public class MinecraftServer implements Runnable, ICommandListener {
+         this.isRunning = false;
+     }
+ 
++    // Canyon start - improve server tick loop
++    /**
++     * A Schedule is an object that can be used to maintain a periodic schedule for an event of interest.
++     */
++    public final class Schedule {
++
++        private long lastPeriod;
++
++        /**
++         * Initialises a schedule with the provided period.
++         * @param firstPeriod The last time an event of interest occurred.
++         * @see #setLastPeriod(long)
++         */
++        public Schedule(final long firstPeriod) {
++            this.lastPeriod = firstPeriod;
++        }
++
++        /**
++         * Updates the last period to the specified value. This call sets the last "time" the event
++         * of interest took place at. Thus, the value returned by {@link #getDeadline(long)} is
++         * the provided time plus the period length provided to {@code getDeadline}.
++         * @param value The value to set the last period to.
++         */
++        public void setLastPeriod(final long value) {
++            this.lastPeriod = value;
++        }
++
++        /**
++         * Returns the last time the event of interest should have taken place.
++         */
++        public long getLastPeriod() {
++            return this.lastPeriod;
++        }
++
++        /**
++         * Returns the number of times the event of interest should have taken place between the last
++         * period and the provided time given the period between each event.
++         * @param periodLength The length of the period between events in ns.
++         * @param time The provided time.
++         */
++        public int getPeriodsAhead(final long periodLength, final long time) {
++            final long difference = time - this.lastPeriod;
++            final int ret = (int)(Math.abs(difference) / periodLength);
++            return difference >= 0 ? ret : -ret;
++        }
++
++        /**
++         * Returns the next starting deadline for the event of interest to take place,
++         * given the provided period length.
++         * @param periodLength The provided period length.
++         */
++        public long getDeadline(final long periodLength) {
++            return this.lastPeriod + periodLength;
++        }
++
++        /**
++         * Adjusts the last period so that the next starting deadline returned is the next period specified,
++         * given the provided period length.
++         * @param nextPeriod The specified next starting deadline.
++         * @param periodLength The specified period length.
++         */
++        public void setNextPeriod(final long nextPeriod, final long periodLength) {
++            this.lastPeriod = nextPeriod - periodLength;
++        }
++
++        /**
++         * Increases the last period by the specified number of periods and period length.
++         * The specified number of periods may be < 0, in which case the last period
++         * will decrease.
++         * @param periods The specified number of periods.
++         * @param periodLength The specified period length.
++         */
++        public void advanceBy(final int periods, final long periodLength) {
++            this.lastPeriod += (long)periods * periodLength;
++        }
++
++        /**
++         * Sets the last period so that it is the specified number of periods ahead
++         * given the specified time and period length.
++         * @param periodsToBeAhead Specified number of periods to be ahead by.
++         * @param periodLength The specified period length.
++         * @param time The specified time.
++         */
++        public void setPeriodsAhead(final int periodsToBeAhead, final long periodLength, final long time) {
++            final int periodsAhead = this.getPeriodsAhead(periodLength, time);
++            final int periodsToAdd = periodsToBeAhead - periodsAhead;
++
++            this.lastPeriod -= (long)periodsToAdd * periodLength;
++        }
++    }
++
++    public static long getGreatestTime(final long t1, final long t2) {
++        final long diff = t1 - t2;
++        return diff < 0L ? t2 : t1;
++    }
++    // Canyon end - improve server tick loop
++
      public void run() {
          try {
              if (this.init()) {
 -                long i = System.currentTimeMillis();
 +                // Canyon Start - Improve server tick loop
-+                long start = System.nanoTime(), curTime, wait, tickSection = start;
-+                lastTick = start - TICK_TIME; // Paper
++                long start = System.nanoTime(), curTime, wait;
++                Schedule tickSchedule = new Schedule(start - TICK_TIME);
++                long scheduledTickStart = tickSchedule.getDeadline(TICK_TIME); // should be == start
  
 +                while (this.isRunning) {
-+                    curTime = System.nanoTime();
-+                    // Paper start - Further improve server tick loop
-+                    wait = TICK_TIME - (curTime - lastTick);
-+                    if (wait > 0) {
-+                        if (catchupTime < 2E6) {
-+                            wait += Math.abs(catchupTime);
-+                        } else if (wait < catchupTime) {
-+                            catchupTime -= wait;
-+                            wait = 0;
-+                        } else {
-+                            wait -= catchupTime;
-+                            catchupTime = 0;
-+                        }
-+                    }
-+                    if (wait > 0) {
-+                        Thread.sleep(wait / 1000000);
++                    // time to start early, currently set to 0L as I don't see any issues with this on Folia
++                    long parkLeniency = 0L;
++                    do {
 +                        curTime = System.nanoTime();
-+                        wait = TICK_TIME - (curTime - lastTick);
-+                    }
++                        // Paper start - Further improve server tick loop
++                        wait = scheduledTickStart - curTime;
 +
-+                    catchupTime = Math.min(MAX_CATCHUP_BUFFER, catchupTime - wait);
-+                    if ( ++MinecraftServer.currentTick % SAMPLE_INTERVAL == 0 )
-+                    {
-+                        final long diff = curTime - tickSection;
-+                        java.math.BigDecimal currentTps = TPS_BASE.divide(new java.math.BigDecimal(diff), 30, java.math.RoundingMode.HALF_UP);
-+                        tps1.add(currentTps, diff);
-+                        tps5.add(currentTps, diff);
-+                        tps15.add(currentTps, diff);
-+                        tickSection = curTime;
-+                    }
++                        if (wait > parkLeniency) {
++                            boolean interrupted = Thread.interrupted();
++                            java.util.concurrent.locks.LockSupport.parkNanos(wait);
++                            if (interrupted) {
++                                Thread.currentThread().interrupt();
++                            }
++                        }
++                    } while (wait > parkLeniency);
 +
-+                    lastTick = curTime;
++                    final long tickStart = curTime;
++
++                    int tickCount = Math.max(1, tickSchedule.getPeriodsAhead(TICK_TIME, curTime));
++
 +                    this.h();
++                    final long tickEnd = System.nanoTime();
++                    tickSchedule.advanceBy(tickCount, TICK_TIME);
++                    scheduledTickStart = getGreatestTime(System.nanoTime(), tickSchedule.getDeadline(TICK_TIME));
++                    this.tps5s.addTick(tickStart, tickEnd);
++                    this.tps15s.addTick(tickStart, tickEnd);
++                    this.tps1.addTick(tickStart, tickEnd);
++                    this.tps5.addTick(tickStart, tickEnd);
++                    this.tps15.addTick(tickStart, tickEnd);
 +                }/*
                  for (long j = 0L; this.isRunning; Thread.sleep(1L)) {
                      long k = System.currentTimeMillis();
                      long l = k - i;
-@@ -370,7 +463,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
+@@ -370,7 +582,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
                              this.h();
                          }
                      }
@@ -137,7 +259,7 @@ index 59358fbd..28178ba9 100644
                  while (this.isRunning) {
                      this.b();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e7e3ccf7..b2123565 100644
+index e7e3ccf7..2e84a5ff 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1,6 +1,7 @@
@@ -148,13 +270,14 @@ index e7e3ccf7..b2123565 100644
  import org.bukkit.generator.ChunkGenerator;
  import com.avaje.ebean.config.DataSourceConfig;
  import com.avaje.ebean.config.ServerConfig;
-@@ -807,6 +808,12 @@ public final class CraftServer implements Server {
+@@ -807,6 +808,13 @@ public final class CraftServer implements Server {
          return result;
      }
  
 +    // Canyon start
 +    public double[] getTPS() {
-+        return new double[] { console.tps1.getAverage(), console.tps5.getAverage(), console.tps15.getAverage() };
++        // forbidden secret tps: 5s, 15s
++        return new double[] { console.tps1.getTps(), console.tps5.getTps(), console.tps15.getTps(), console.tps5s.getTps(), console.tps15s.getTps() };
 +    }
 +    // Canyon end
 +
@@ -162,5 +285,5 @@ index e7e3ccf7..b2123565 100644
          server.o = value;
          console.propertyManager.b("white-list", value);
 -- 
-2.25.1
+2.43.0.windows.1
 

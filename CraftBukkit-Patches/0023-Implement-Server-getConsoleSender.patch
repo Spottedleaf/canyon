@@ -1,14 +1,14 @@
-From 55f4855c22ac2e65b12e9f56e0b92e1a9b46be52 Mon Sep 17 00:00:00 2001
+From b98ac783fa99f3fd0a5258da5c702a77be486537 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Fri, 13 Mar 2020 02:49:27 -0400
 Subject: [PATCH] Implement Server#getConsoleSender()
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 4f1902fcf..efbe2ac7d 100644
+index e921c3bf..98e2521f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -817,6 +817,13 @@ public final class CraftServer implements Server {
+@@ -818,6 +818,13 @@ public final class CraftServer implements Server {
      }
      // Canyon end
  
@@ -23,5 +23,5 @@ index 4f1902fcf..efbe2ac7d 100644
          server.o = value;
          console.propertyManager.b("white-list", value);
 -- 
-2.33.0
+2.43.0.windows.1
 
