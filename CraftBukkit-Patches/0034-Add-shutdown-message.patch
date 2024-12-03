@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Spottedleaf <Spottedleaf@users.noreply.github.com>
+Date: Mon, 2 Dec 2024 21:45:16 -0800
+Subject: [PATCH] Add shutdown message
+
+
+diff --git a/src/main/java/com/canyonmodded/config/CanyonConfig.java b/src/main/java/com/canyonmodded/config/CanyonConfig.java
+index de27ef58f35c2532d36788d9325c27bbe80535c3..324dad542d55a5ac7b160639e4cc135438b9d349 100644
+--- a/src/main/java/com/canyonmodded/config/CanyonConfig.java
++++ b/src/main/java/com/canyonmodded/config/CanyonConfig.java
+@@ -14,6 +14,7 @@ public class CanyonConfig {
+     public static int itemDespawnRate = 6000;
+     public static boolean randomizeInitialSpawn = true;
+     public static int unloadInactiveChunksAfter = 0;
++    public static String shutdownMessage = "Server shutting down";
+ 
+     public static void loadConfiguration(File file) {
+         Configuration configuration = new Configuration(file);
+@@ -28,6 +29,7 @@ public class CanyonConfig {
+         itemDespawnRate = configuration.getInt("optimization.item-despawn-rate", itemDespawnRate);
+         randomizeInitialSpawn = configuration.getBoolean("settings.randomize-initial-spawn", true);
+         unloadInactiveChunksAfter = configuration.getInt("optimization.unload-inactive-chunks-after", unloadInactiveChunksAfter);
++        shutdownMessage = configuration.getString("settings.shutdown-message", shutdownMessage);
+ 
+         configuration.save();
+     }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 0ceeeeef2863b030ea7c922b6006916d429a98fd..2fe986876c0044d0fd284a62edc96469bfe84dae 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -432,6 +432,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
+ 
+         if (this.serverConfigurationManager != null) {
+             this.serverConfigurationManager.savePlayers();
++            this.serverConfigurationManager.kickPlayers(); // Canyon - add shutdown message
+         }
+ 
+         // CraftBukkit start - multiworld is handled in saveChunks() already.
+diff --git a/src/main/java/net/minecraft/server/ServerConfigurationManager.java b/src/main/java/net/minecraft/server/ServerConfigurationManager.java
+index 7ab9e27543324881154923e1e667757121fd8f10..6934c1f6fc8449a14a08647ee61671fddb68c2e9 100644
+--- a/src/main/java/net/minecraft/server/ServerConfigurationManager.java
++++ b/src/main/java/net/minecraft/server/ServerConfigurationManager.java
+@@ -625,6 +625,23 @@ public class ServerConfigurationManager {
+         }
+     }
+ 
++    // Canyon start - add shutdown message
++    public void kickPlayers() {
++        for (int i = 0; i < this.players.size(); ++i) {
++            EntityPlayer player = (EntityPlayer)this.players.get(i);
++            player.netServerHandler.sendPacket(new Packet255KickDisconnect(com.canyonmodded.config.CanyonConfig.shutdownMessage));
++        }
++        if (!this.players.isEmpty()) {
++            // wait for packets to send
++            try {
++                Thread.sleep(100L);
++            } catch (final InterruptedException ex) {
++                Thread.currentThread().interrupt();
++            }
++        }
++    }
++    // Canyon end - add shutdown message
++
+     public void a(int i, int j, int k, TileEntity tileentity) {}
+ 
+     public void k(String s) {
