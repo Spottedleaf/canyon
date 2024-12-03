@@ -1,4 +1,4 @@
-From 212a71939e3033ecd972ba1be33bb2e21f3f74fd Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jakub=20Staro=C5=84?= <kubastaron@hotmail.com>
 Date: Wed, 11 Mar 2020 18:08:34 +0100
 Subject: [PATCH] Add tps api and /tps command
@@ -6,7 +6,7 @@ Subject: [PATCH] Add tps api and /tps command
 
 diff --git a/src/main/java/com/canyonmodded/command/TpsCommand.java b/src/main/java/com/canyonmodded/command/TpsCommand.java
 new file mode 100644
-index 00000000..bd4d8a18
+index 0000000000000000000000000000000000000000..bd4d8a184e5bd265cb4910fe02cfef31f9095572
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/command/TpsCommand.java
 @@ -0,0 +1,49 @@
@@ -60,7 +60,7 @@ index 00000000..bd4d8a18
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 1ef6cfa7..0ad93193 100644
+index 1ef6cfa748430260702a1b22f996b669730b3ce4..8b21ad20afcccfc07201b49673a0f2b18be1cf7b 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -441,4 +441,13 @@ public interface Server {
@@ -78,7 +78,7 @@ index 1ef6cfa7..0ad93193 100644
 +    // Canyon end
  }
 diff --git a/src/main/java/org/bukkit/command/SimpleCommandMap.java b/src/main/java/org/bukkit/command/SimpleCommandMap.java
-index 2abd87e5..b3b32908 100644
+index 2abd87e5a2145ada55794c3d294f29a91be41b1d..b3b329088fe46d23f24f512b38266e48535e5c65 100644
 --- a/src/main/java/org/bukkit/command/SimpleCommandMap.java
 +++ b/src/main/java/org/bukkit/command/SimpleCommandMap.java
 @@ -1,5 +1,6 @@
@@ -99,6 +99,3 @@ index 2abd87e5..b3b32908 100644
      }
  
      /**
--- 
-2.24.1.windows.2
-

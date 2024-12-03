@@ -1,11 +1,11 @@
-From 2523e2272e44f220bbb2279e2581ec5f72dd4dbb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Mon, 30 Sep 2019 02:28:06 -0400
 Subject: [PATCH] User-configurable autosave
 
 
 diff --git a/src/main/java/com/canyonmodded/config/CanyonConfig.java b/src/main/java/com/canyonmodded/config/CanyonConfig.java
-index 971ac06c..0e5b7a19 100644
+index 971ac06c593943c80875c5c8822b099ac93b58c9..0e5b7a19aac264dcf84e2f3dda2e9023ef8c9ce4 100644
 --- a/src/main/java/com/canyonmodded/config/CanyonConfig.java
 +++ b/src/main/java/com/canyonmodded/config/CanyonConfig.java
 @@ -7,6 +7,8 @@ import java.io.File;
@@ -27,7 +27,7 @@ index 971ac06c..0e5b7a19 100644
          configuration.save();
      }
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 4c19b963..1d4ad166 100644
+index 4c19b9636ecc20ca8648d928c3967c6e9910c44e..1d4ad16617711e4260762605de0480c53ac87546 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -1728,7 +1728,7 @@ public class World implements IBlockAccess {
@@ -39,6 +39,3 @@ index 4c19b963..1d4ad166 100644
              this.save(false, (IProgressUpdate) null);
          }
  
--- 
-2.26.2
-

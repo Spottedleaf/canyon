@@ -1,4 +1,4 @@
-From 25c26658f32deb4c44eebbf390f29dd2c45f8b5f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Spottedleaf <Spottedleaf@users.noreply.github.com>
 Date: Mon, 15 Jan 2024 03:45:32 -0800
 Subject: [PATCH] Improve response times of default networking code
@@ -17,7 +17,7 @@ writer will wake it from sleep and move the flush() logic to occur
 directly after draining the packet queue.
 
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index e393ad56..f185b4e2 100644
+index e393ad566e07894bf9914196e223fa465c297109..f185b4e27f75f1fbb1df1530c4651d1b9b8d129f 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
 @@ -26,7 +26,7 @@ public class NetworkManager {
@@ -46,7 +46,7 @@ index e393ad56..f185b4e2 100644
              try {
                  this.input.close();
 diff --git a/src/main/java/net/minecraft/server/NetworkReaderThread.java b/src/main/java/net/minecraft/server/NetworkReaderThread.java
-index 1f7ae82e..0b866562 100644
+index 1f7ae82e84491fdce7684d4daa87b2c4acdac673..0b8665629bf8656c03edbd03598734ebb057b2cf 100644
 --- a/src/main/java/net/minecraft/server/NetworkReaderThread.java
 +++ b/src/main/java/net/minecraft/server/NetworkReaderThread.java
 @@ -31,15 +31,7 @@ class NetworkReaderThread extends Thread {
@@ -67,7 +67,7 @@ index 1f7ae82e..0b866562 100644
                  if (flag) {
                      Object object1 = NetworkManager.a;
 diff --git a/src/main/java/net/minecraft/server/NetworkWriterThread.java b/src/main/java/net/minecraft/server/NetworkWriterThread.java
-index 9f42388f..78f57bd5 100644
+index 9f42388f60a41dbb593424f6bee6d3969be62f47..78f57bd5b4df079cdb99298acaf06be5aed46333 100644
 --- a/src/main/java/net/minecraft/server/NetworkWriterThread.java
 +++ b/src/main/java/net/minecraft/server/NetworkWriterThread.java
 @@ -11,6 +11,26 @@ class NetworkWriterThread extends Thread {
@@ -162,6 +162,3 @@ index 9f42388f..78f57bd5 100644
              } finally {
                  if (flag) {
                      Object object1 = NetworkManager.a;
--- 
-2.43.0.windows.1
-

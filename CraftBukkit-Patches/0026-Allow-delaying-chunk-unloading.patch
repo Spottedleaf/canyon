@@ -1,11 +1,11 @@
-From aef35f1a55efad4933766776437dee2a45915afe Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 19 Mar 2020 04:32:11 -0400
 Subject: [PATCH] Allow delaying chunk unloading
 
 
 diff --git a/pom.xml b/pom.xml
-index 50f8472b0..c37ec7fef 100644
+index a6d330fcb15bc0b6494b05b4450dac375035f8cc..7a24396794a357d7dd3452e04a9e505c52f93eff 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -26,6 +26,10 @@
@@ -27,7 +27,7 @@ index 50f8472b0..c37ec7fef 100644
 +    <dependency>
 +      <groupId>it.unimi.dsi</groupId>
 +      <artifactId>fastutil</artifactId>
-+      <version>8.3.1</version>
++      <version>8.5.15</version>
 +      <scope>compile</scope>
 +    </dependency>
    </dependencies>
@@ -48,7 +48,7 @@ index 50f8472b0..c37ec7fef 100644
          </executions>
        </plugin>
 diff --git a/src/main/java/com/canyonmodded/config/CanyonConfig.java b/src/main/java/com/canyonmodded/config/CanyonConfig.java
-index b8f897f30..de27ef58f 100644
+index b8f897f3021ac1dcc421cd88d96281aadecf02d5..de27ef58f35c2532d36788d9325c27bbe80535c3 100644
 --- a/src/main/java/com/canyonmodded/config/CanyonConfig.java
 +++ b/src/main/java/com/canyonmodded/config/CanyonConfig.java
 @@ -13,6 +13,7 @@ public class CanyonConfig {
@@ -68,7 +68,7 @@ index b8f897f30..de27ef58f 100644
          configuration.save();
      }
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 7e8490779..a343744b0 100644
+index 7e84907791fe3efef2883dc77ee4be5c3e556f13..a343744b04818965733e1972acf7f60609474873 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -11,6 +11,7 @@ import java.util.Set;
@@ -128,7 +128,7 @@ index 7e8490779..a343744b0 100644
                  if (chunk == null) continue;
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/LongHash.java b/src/main/java/org/bukkit/craftbukkit/util/LongHash.java
-index f3fc7d195..de15f8c31 100644
+index f3fc7d19587dfad3ccccd196b3be8ba96d4e9bda..de15f8c3190db0756e8e6ff398a1d915eb32dc30 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/LongHash.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/LongHash.java
 @@ -10,7 +10,7 @@ package org.bukkit.craftbukkit.util;
@@ -140,6 +140,3 @@ index f3fc7d195..de15f8c31 100644
          return ((long) msw << 32) + lsw - Integer.MIN_VALUE;
      }
  
--- 
-2.33.0
-

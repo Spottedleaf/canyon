@@ -1,4 +1,4 @@
-From 56c068e22259361b8a2dcd89da5840cc0950b643 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: mintoyatsu <53593903+mintoyatsu@users.noreply.github.com>
 Date: Tue, 10 Mar 2020 04:06:11 -0700
 Subject: [PATCH] Server difficulty API
@@ -7,7 +7,7 @@ Allows plugins to get/set difficulty on a per-world basis.
 
 diff --git a/src/main/java/org/bukkit/Difficulty.java b/src/main/java/org/bukkit/Difficulty.java
 new file mode 100644
-index 00000000..1e694f79
+index 0000000000000000000000000000000000000000..1e694f79cc1c1e69b437955c95879d1b82fdd6cf
 --- /dev/null
 +++ b/src/main/java/org/bukkit/Difficulty.java
 @@ -0,0 +1,61 @@
@@ -73,7 +73,7 @@ index 00000000..1e694f79
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index c46e963a..c8f5ea5c 100644
+index c46e963a8749a0cf7293b4cf9bdd7590e5d2c12c..c8f5ea5c62d15e16b984ff0cb9f53444f9a3716e 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
 @@ -714,6 +714,22 @@ public interface World {
@@ -99,6 +99,3 @@ index c46e963a..c8f5ea5c 100644
      /**
       * Represents various map environment types that a world may be
       */
--- 
-2.26.2
-

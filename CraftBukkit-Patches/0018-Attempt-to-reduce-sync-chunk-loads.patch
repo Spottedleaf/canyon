@@ -1,11 +1,11 @@
-From e9a160ff8812f7291aa422a26abb7f6d6bf471d5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Sun, 6 Oct 2019 01:39:11 -0400
 Subject: [PATCH] Attempt to reduce sync chunk loads
 
 
 diff --git a/src/main/java/net/minecraft/server/BlockGrass.java b/src/main/java/net/minecraft/server/BlockGrass.java
-index 803067f7c..b16f9a4b1 100644
+index 803067f7c2499bc34ad8089831918c8bc10406aa..b16f9a4b1e05cd646d6d9c9544e915f67ef6790f 100644
 --- a/src/main/java/net/minecraft/server/BlockGrass.java
 +++ b/src/main/java/net/minecraft/server/BlockGrass.java
 @@ -22,6 +22,7 @@ public class BlockGrass extends Block {
@@ -16,6 +16,3 @@ index 803067f7c..b16f9a4b1 100644
                  int k1 = world.getTypeId(l, i1 + 1, j1);
  
                  if (world.getTypeId(l, i1, j1) == Block.DIRT.id && world.getLightLevel(l, i1 + 1, j1) >= 4 && Block.q[k1] <= 2) {
--- 
-2.33.0
-

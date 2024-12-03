@@ -51,10 +51,10 @@ function savePatches {
 
     cd "$basedir/$target"
 
-    $gitcmd format-patch --no-stat -N -o "$basedir/${what_name}-Patches/" upstream/upstream >/dev/null
+    $gitcmd format-patch --no-signature --zero-commit --full-index --no-stat -N -o "$basedir/${what_name}-Patches/" upstream/upstream >/dev/null
     cd "$basedir"
     $gitcmd add -A "$basedir/${what_name}-Patches"
-    cleanupPatches "$basedir/${what_name}-Patches"
+    #cleanupPatches "$basedir/${what_name}-Patches"
     echo "  Patches saved for $what to $what_name-Patches/"
 }
 

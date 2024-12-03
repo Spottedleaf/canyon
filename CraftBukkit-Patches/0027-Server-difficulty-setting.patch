@@ -1,4 +1,4 @@
-From 9266f4204943624750e37ddf96a176a801974949 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: mintoyatsu <53593903+mintoyatsu@users.noreply.github.com>
 Date: Tue, 10 Mar 2020 03:40:34 -0700
 Subject: [PATCH] Server difficulty setting
@@ -9,7 +9,7 @@ property has four values: 0 (Peaceful), 1 (Easy), 2 (Normal), 3 (Hard).
 regardless of difficulty.
 
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index a57fbf77..733c742f 100644
+index a57fbf7714ad39fd2b9e33a4b6029f27a269b515..733c742fdc2ddb4e234fdceca7c591a5bb1be344 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
 @@ -175,8 +175,8 @@ public abstract class EntityHuman extends EntityLiving {
@@ -24,7 +24,7 @@ index a57fbf77..733c742f 100644
          }
  
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index cc46d39f..0ceeeeef 100644
+index cc46d39f79432d3ea03908ae370455d8f2a4a899..0ceeeeef2863b030ea7c922b6006916d429a98fd 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -334,7 +334,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
@@ -37,7 +37,7 @@ index cc46d39f..0ceeeeef 100644
              this.worlds.add(world);
              this.serverConfigurationManager.setPlayerFileData(this.worlds.toArray(new WorldServer[0]));
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9808a42a..3e33ebb6 100644
+index 0dc1cccd522e9eca49072c9a5136026ba4314fb2..2f5debfa730d94f4e9409d83f865a4b6067ff06d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -364,6 +364,7 @@ public final class CraftServer implements Server {
@@ -58,7 +58,7 @@ index 9808a42a..3e33ebb6 100644
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index c51e06fb..b9e8290b 100644
+index c51e06fb621c760210606a4933a9e386b394273f..b9e8290b42211a0a9ef73986c77774d1aae211ce 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -34,6 +34,10 @@ import org.bukkit.World;
@@ -89,6 +89,3 @@ index c51e06fb..b9e8290b 100644
      public boolean hasStorm() {
          return world.worldData.hasStorm();
      }
--- 
-2.43.0.windows.1
-

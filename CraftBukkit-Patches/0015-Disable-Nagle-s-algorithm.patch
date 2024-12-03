@@ -1,11 +1,11 @@
-From 0ddf876905c530bd6ee8db2f29c2ea55fec491c7 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Sun, 6 Oct 2019 17:06:39 -0400
 Subject: [PATCH] Disable Nagle's algorithm
 
 
 diff --git a/src/main/java/com/canyonmodded/network/NettyBootstrap.java b/src/main/java/com/canyonmodded/network/NettyBootstrap.java
-index 0e58eeff5..c4bf01960 100644
+index 0e58eeff557ea7acc1f41384a057b390bbe9a168..c4bf01960a394c34a62a93db17ff1af635cb4ffc 100644
 --- a/src/main/java/com/canyonmodded/network/NettyBootstrap.java
 +++ b/src/main/java/com/canyonmodded/network/NettyBootstrap.java
 @@ -76,6 +76,8 @@ public class NettyBootstrap {
@@ -18,7 +18,7 @@ index 0e58eeff5..c4bf01960 100644
                          NetLoginHandler handler = new NetLoginHandler(server, channel);
                          channel.pipeline()
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index 856189308..e393ad566 100644
+index 856189308bed4ea27af2b9b052e7601c54a38164..e393ad566e07894bf9914196e223fa465c297109 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
 @@ -59,6 +59,7 @@ public class NetworkManager {
@@ -29,6 +29,3 @@ index 856189308..e393ad566 100644
              this.input = new DataInputStream(socket.getInputStream());
              this.output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream(), 5120));
          } catch (java.io.IOException socketexception) {
--- 
-2.33.0
-

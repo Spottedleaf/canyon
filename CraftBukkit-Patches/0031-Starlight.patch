@@ -1,4 +1,4 @@
-From ecde53ba35af7a3a1917be062d0af7433b0f6461 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Spottedleaf <Spottedleaf@users.noreply.github.com>
 Date: Mon, 15 Jan 2024 01:07:06 -0800
 Subject: [PATCH] Starlight
@@ -9,7 +9,7 @@ which is ported from https://github.com/PaperMC/Starlight
 
 diff --git a/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
 new file mode 100644
-index 00000000..3e47665c
+index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2fb8707b2
 --- /dev/null
 +++ b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
 @@ -0,0 +1,692 @@
@@ -707,7 +707,7 @@ index 00000000..3e47665c
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/Block.java b/src/main/java/net/minecraft/server/Block.java
-index 8183374e..85508156 100644
+index 8183374e2eb0523e0096d2162689d14cfee3bf23..855081560e443a61068f16cb9f329bfcb21661b0 100644
 --- a/src/main/java/net/minecraft/server/Block.java
 +++ b/src/main/java/net/minecraft/server/Block.java
 @@ -18,9 +18,9 @@ public class Block {
@@ -723,7 +723,7 @@ index 8183374e..85508156 100644
      public static final Block STONE = (new BlockStone(1, 1)).c(1.5F).b(10.0F).a(h).a("stone");
      public static final BlockGrass GRASS = (BlockGrass) (new BlockGrass(2)).c(0.6F).a(g).a("grass");
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index bd6f9f1f..b2617445 100644
+index bd6f9f1fb0492df251fecb1afccf2dfc0cfc28cc..b26174455610064617989aa9a8aca956db1601a3 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -14,8 +14,8 @@ public class Chunk {
@@ -868,7 +868,7 @@ index bd6f9f1f..b2617445 100644
                  Block.byId[l].c(this.world, k1, j, l1);
              }
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index a343744b..00ea83c3 100644
+index a343744b04818965733e1972acf7f60609474873..00ea83c32ae8f6f08f8890079f8a916a02c52d38 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -100,6 +100,7 @@ public class ChunkProviderServer implements IChunkProvider {
@@ -888,7 +888,7 @@ index a343744b..00ea83c3 100644
  
              // CraftBukkit start
 diff --git a/src/main/java/net/minecraft/server/NibbleArray.java b/src/main/java/net/minecraft/server/NibbleArray.java
-index 186e8961..8e89d17f 100644
+index 186e8961d9d9fac009e5275b481da11b03511489..8e89d17ff56c73b2f8331241361ed8aa3a3cea0f 100644
 --- a/src/main/java/net/minecraft/server/NibbleArray.java
 +++ b/src/main/java/net/minecraft/server/NibbleArray.java
 @@ -12,24 +12,25 @@ public class NibbleArray {
@@ -933,7 +933,7 @@ index 186e8961..8e89d17f 100644
  
      public boolean a() {
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 1d4ad166..bfb70bd9 100644
+index 1d4ad16617711e4260762605de0480c53ac87546..bfb70bd92b734cd9481863658f7da5dc45baaf4a 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -111,6 +111,9 @@ public class World implements IBlockAccess {
@@ -955,6 +955,3 @@ index 1d4ad166..bfb70bd9 100644
          return this.chunkProvider.isChunkLoaded(i, j);
      }
  
--- 
-2.43.0.windows.1
-

@@ -1,4 +1,4 @@
-From df5d80d13f589d66a37442a7c613258b76e726ae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: mintoyatsu <53593903+mintoyatsu@users.noreply.github.com>
 Date: Sat, 18 Jul 2020 00:39:22 -0700
 Subject: [PATCH] InhabitedTime chunk NBT field
@@ -7,7 +7,7 @@ Keeps track of how long (in ticks) chunks have been loaded by players.
 This applies to all chunks within the player's render distance.
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index e44b93789..bd6f9f1fb 100644
+index e44b9378926704a2609277a41ead41304982fae1..bd6f9f1fb0492df251fecb1afccf2dfc0cfc28cc 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -27,6 +27,7 @@ public class Chunk {
@@ -19,7 +19,7 @@ index e44b93789..bd6f9f1fb 100644
      public Chunk(World world, int i, int j) {
          this.tileEntities = new HashMap();
 diff --git a/src/main/java/net/minecraft/server/ChunkLoader.java b/src/main/java/net/minecraft/server/ChunkLoader.java
-index 7729ea5fd..47d7d248c 100644
+index 7729ea5fde7ae4ee241ccbac88dafc9ad1daa5f9..47d7d248c42ff266d91af7b4764d4ebe58a21d6e 100644
 --- a/src/main/java/net/minecraft/server/ChunkLoader.java
 +++ b/src/main/java/net/minecraft/server/ChunkLoader.java
 @@ -125,6 +125,7 @@ public class ChunkLoader implements IChunkLoader {
@@ -39,7 +39,7 @@ index 7729ea5fd..47d7d248c 100644
              chunk.e = new NibbleArray(chunk.b.length);
          }
 diff --git a/src/main/java/net/minecraft/server/PlayerInstance.java b/src/main/java/net/minecraft/server/PlayerInstance.java
-index d32d70db7..9f94bbda9 100644
+index d32d70db700a896293bc58ccda2e923ee1888ff0..9f94bbda9351a9abed5847389e316c8a25afef5c 100644
 --- a/src/main/java/net/minecraft/server/PlayerInstance.java
 +++ b/src/main/java/net/minecraft/server/PlayerInstance.java
 @@ -17,6 +17,7 @@ class PlayerInstance {
@@ -91,7 +91,7 @@ index d32d70db7..9f94bbda9 100644
 +    // Canyon end
  }
 diff --git a/src/main/java/net/minecraft/server/PlayerManager.java b/src/main/java/net/minecraft/server/PlayerManager.java
-index 88a3e63f3..b6a5e11c8 100644
+index 88a3e63f35dc453b6a8097a136773412ae635c08..b6a5e11c8de1a4b4849216eccdf5eccbee60831d 100644
 --- a/src/main/java/net/minecraft/server/PlayerManager.java
 +++ b/src/main/java/net/minecraft/server/PlayerManager.java
 @@ -12,6 +12,8 @@ public class PlayerManager {
@@ -149,6 +149,3 @@ index 88a3e63f3..b6a5e11c8 100644
 +    }
 +    // Canyon end
  }
--- 
-2.33.0
-

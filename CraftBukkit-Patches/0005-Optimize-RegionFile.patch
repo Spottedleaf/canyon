@@ -1,4 +1,4 @@
-From 157cec51bdbcf274cdda49b59eab267191440760 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 22 Aug 2019 01:48:38 -0400
 Subject: [PATCH] Optimize RegionFile
@@ -7,7 +7,7 @@ Reads are batched as much as possible, file system truncation calls
 are used, and chunk buffers (for writing and reading) are buffered.
 
 diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
-index 1aca87dd0..88d276af6 100644
+index 1aca87dd01703c0c26575670848d6983ce7a82fa..88d276af62d9f84b68cda0f303d22cc44cdab76f 100644
 --- a/src/main/java/net/minecraft/server/RegionFile.java
 +++ b/src/main/java/net/minecraft/server/RegionFile.java
 @@ -1,11 +1,6 @@
@@ -150,6 +150,3 @@ index 1aca87dd0..88d276af6 100644
      }
  
      protected synchronized void a(int i, int j, byte[] abyte, int k) {
--- 
-2.33.0
-

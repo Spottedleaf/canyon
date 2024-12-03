@@ -1,4 +1,4 @@
-From 720c404034042799d4b25a7ec03e80fa16baaf13 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Spottedleaf <Spottedleaf@users.noreply.github.com>
 Date: Mon, 15 Jan 2024 00:10:40 -0800
 Subject: [PATCH] Make region files more reliable to write to
@@ -37,7 +37,7 @@ affect save performance if the startup flag is used (especially on
 HDDs).
 
 diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
-index 88d276af..c6fb070a 100644
+index 88d276af62d9f84b68cda0f303d22cc44cdab76f..c6fb070aee85a7a7bd58e1e4e1694950a52d769f 100644
 --- a/src/main/java/net/minecraft/server/RegionFile.java
 +++ b/src/main/java/net/minecraft/server/RegionFile.java
 @@ -10,10 +10,10 @@ public class RegionFile {
@@ -192,6 +192,3 @@ index 88d276af..c6fb070a 100644
 +    }
 +    // Paper end - make region files more reliable to write to
  }
--- 
-2.43.0.windows.1
-

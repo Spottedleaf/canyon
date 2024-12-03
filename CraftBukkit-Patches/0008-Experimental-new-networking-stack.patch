@@ -1,4 +1,4 @@
-From 0be5649664dc38cca4ff35c96deaa9de68f481a0 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 22 Aug 2019 23:12:21 -0400
 Subject: [PATCH] Experimental new networking stack
@@ -14,7 +14,7 @@ modify the packet reader and writer to manipulate packets. An alternative
 API may be provided in the future.
 
 diff --git a/pom.xml b/pom.xml
-index d5dcc0d4..7d6f9471 100644
+index 54bfb1929c79b2afa645d195b40f4ca1b5ee557b..fda94ee6f6baea495a5ee59e8a358353b5988790 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -79,14 +79,14 @@
@@ -22,7 +22,7 @@ index d5dcc0d4..7d6f9471 100644
        <groupId>io.netty</groupId>
        <artifactId>netty-handler</artifactId>
 -      <version>4.1.38.Final</version>
-+      <version>4.1.49.Final</version>
++      <version>4.1.115.Final</version>
        <type>jar</type>
        <scope>compile</scope>
      </dependency>
@@ -30,7 +30,7 @@ index d5dcc0d4..7d6f9471 100644
        <groupId>io.netty</groupId>
        <artifactId>netty-transport-native-epoll</artifactId>
 -      <version>4.1.38.Final</version>
-+      <version>4.1.49.Final</version>
++      <version>4.1.115.Final</version>
        <type>jar</type>
        <scope>compile</scope>
        <classifier>linux-x86_64</classifier>
@@ -39,12 +39,12 @@ index d5dcc0d4..7d6f9471 100644
        <groupId>io.netty</groupId>
        <artifactId>netty-transport-native-kqueue</artifactId>
 -      <version>4.1.38.Final</version>
-+      <version>4.1.49.Final</version>
++      <version>4.1.115.Final</version>
        <type>jar</type>
        <scope>compile</scope>
        <classifier>osx-x86_64</classifier>
 diff --git a/src/main/java/com/canyonmodded/config/CanyonConfig.java b/src/main/java/com/canyonmodded/config/CanyonConfig.java
-index d7dffe62..971ac06c 100644
+index d7dffe62de64b3941880b774589c7e5dc2e81fea..971ac06c593943c80875c5c8822b099ac93b58c9 100644
 --- a/src/main/java/com/canyonmodded/config/CanyonConfig.java
 +++ b/src/main/java/com/canyonmodded/config/CanyonConfig.java
 @@ -6,12 +6,14 @@ import java.io.File;
@@ -64,7 +64,7 @@ index d7dffe62..971ac06c 100644
      }
 diff --git a/src/main/java/com/canyonmodded/network/AsyncCapableNetHandler.java b/src/main/java/com/canyonmodded/network/AsyncCapableNetHandler.java
 new file mode 100644
-index 00000000..d645e7c9
+index 0000000000000000000000000000000000000000..d645e7c992add411640c239992119bd1c6c1cf8c
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/AsyncCapableNetHandler.java
 @@ -0,0 +1,4 @@
@@ -74,7 +74,7 @@ index 00000000..d645e7c9
 +}
 diff --git a/src/main/java/com/canyonmodded/network/NettyBootstrap.java b/src/main/java/com/canyonmodded/network/NettyBootstrap.java
 new file mode 100644
-index 00000000..0e58eeff
+index 0000000000000000000000000000000000000000..0e58eeff557ea7acc1f41384a057b390bbe9a168
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/NettyBootstrap.java
 @@ -0,0 +1,137 @@
@@ -217,7 +217,7 @@ index 00000000..0e58eeff
 +}
 diff --git a/src/main/java/com/canyonmodded/network/NettyNetworkManager.java b/src/main/java/com/canyonmodded/network/NettyNetworkManager.java
 new file mode 100644
-index 00000000..0fdd777a
+index 0000000000000000000000000000000000000000..0fdd777a01be64766f042e23bb947beebe5b3f4c
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/NettyNetworkManager.java
 @@ -0,0 +1,59 @@
@@ -282,7 +282,7 @@ index 00000000..0fdd777a
 +}
 diff --git a/src/main/java/com/canyonmodded/network/NetworkManagerHandler.java b/src/main/java/com/canyonmodded/network/NetworkManagerHandler.java
 new file mode 100644
-index 00000000..25d4811b
+index 0000000000000000000000000000000000000000..25d4811be680014fdc61b0a88ae7fd83e828cf8a
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/NetworkManagerHandler.java
 @@ -0,0 +1,60 @@
@@ -348,7 +348,7 @@ index 00000000..25d4811b
 +}
 diff --git a/src/main/java/com/canyonmodded/network/PacketDecoder.java b/src/main/java/com/canyonmodded/network/PacketDecoder.java
 new file mode 100644
-index 00000000..6d23f8ae
+index 0000000000000000000000000000000000000000..6d23f8ae447af05deb77d06fdd3f807f60c8dde6
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/PacketDecoder.java
 @@ -0,0 +1,32 @@
@@ -386,7 +386,7 @@ index 00000000..6d23f8ae
 +}
 diff --git a/src/main/java/com/canyonmodded/network/PacketEncoder.java b/src/main/java/com/canyonmodded/network/PacketEncoder.java
 new file mode 100644
-index 00000000..5317f40d
+index 0000000000000000000000000000000000000000..5317f40ddc21173c04a9a5e9cc197c859cb7b940
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/network/PacketEncoder.java
 @@ -0,0 +1,39 @@
@@ -430,7 +430,7 @@ index 00000000..5317f40d
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2defb1b3..c57e0b0f 100644
+index 2defb1b3e936fa77f3a66edd1a0aac0698c6d815..c57e0b0f8330fb3d70a5d59c5f5c12f13daa59f0 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -4,18 +4,17 @@ import java.awt.GraphicsEnvironment;
@@ -573,7 +573,7 @@ index 2defb1b3..c57e0b0f 100644
              log.log(Level.SEVERE, "Failed to start the minecraft server", exception);
          }
 diff --git a/src/main/java/net/minecraft/server/NetLoginHandler.java b/src/main/java/net/minecraft/server/NetLoginHandler.java
-index 99e775b8..21347010 100644
+index 99e775b8bd0121f9f93587b980615d3dc15a6298..21347010826287a15e6c4786355904d39d68251d 100644
 --- a/src/main/java/net/minecraft/server/NetLoginHandler.java
 +++ b/src/main/java/net/minecraft/server/NetLoginHandler.java
 @@ -1,10 +1,12 @@
@@ -651,7 +651,7 @@ index 99e775b8..21347010 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/NetServerHandler.java b/src/main/java/net/minecraft/server/NetServerHandler.java
-index a8241311..68dcfca1 100644
+index a824131191c403d10019039bc3416dc388ac7348..68dcfca12ef0c88ca7922817e29df460f0413b6f 100644
 --- a/src/main/java/net/minecraft/server/NetServerHandler.java
 +++ b/src/main/java/net/minecraft/server/NetServerHandler.java
 @@ -649,7 +649,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
@@ -664,7 +664,7 @@ index a8241311..68dcfca1 100644
              ChunkCompressionThread.sendPacket(this.player, packet);
              packet = null;
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index 11cf7db8..85618930 100644
+index 11cf7db87b48e053f666c75bb1c282733f7b66a9..856189308bed4ea27af2b9b052e7601c54a38164 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
 @@ -24,7 +24,7 @@ public class NetworkManager {
@@ -714,7 +714,7 @@ index 11cf7db8..85618930 100644
              this.l = false;
  
 diff --git a/src/main/java/net/minecraft/server/Packet.java b/src/main/java/net/minecraft/server/Packet.java
-index f83acc41..525c00ff 100644
+index f83acc410e03ee6fec580c97738cf2eb400e9820..525c00ff863e8d549393ed04e8873513a7df07e2 100644
 --- a/src/main/java/net/minecraft/server/Packet.java
 +++ b/src/main/java/net/minecraft/server/Packet.java
 @@ -56,8 +56,14 @@ public abstract class Packet {
@@ -742,7 +742,7 @@ index f83acc41..525c00ff 100644
              return null;
          }
 diff --git a/src/main/java/net/minecraft/server/Packet10Flying.java b/src/main/java/net/minecraft/server/Packet10Flying.java
-index 7bf2f671..66a440b9 100644
+index 7bf2f67133bfbefaeec03b7fd979a999f471411f..66a440b93e044802e7f65a2d9c12516c0baa7062 100644
 --- a/src/main/java/net/minecraft/server/Packet10Flying.java
 +++ b/src/main/java/net/minecraft/server/Packet10Flying.java
 @@ -22,7 +22,7 @@ public class Packet10Flying extends Packet {
@@ -755,7 +755,7 @@ index 7bf2f671..66a440b9 100644
  
      public void a(DataOutputStream dataoutputstream) throws java.io.IOException { // Canyon - fix decompile
 diff --git a/src/main/java/net/minecraft/server/ThreadLoginVerifier.java b/src/main/java/net/minecraft/server/ThreadLoginVerifier.java
-index 4d98e6ad..306db21c 100644
+index 4d98e6adaf7712873eeb437a272fa93964b6910b..306db21c97e0be42d491d1093b6d79e993dd3d6f 100644
 --- a/src/main/java/net/minecraft/server/ThreadLoginVerifier.java
 +++ b/src/main/java/net/minecraft/server/ThreadLoginVerifier.java
 @@ -37,11 +37,18 @@ class ThreadLoginVerifier extends Thread {
@@ -779,6 +779,3 @@ index 4d98e6ad..306db21c 100644
                  this.server.getPluginManager().callEvent(event);
  
                  if (event.getResult() != PlayerPreLoginEvent.Result.ALLOWED) {
--- 
-2.43.0.windows.1
-

@@ -40,3 +40,5 @@ target/
 hs_err_pid*
 
 test-server
+
+dependency-reduced-pom.xml

@@ -1,4 +1,4 @@
-From ad4936fcdffcb8b1934bd3d54dd29a89324318af Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Sat, 5 Oct 2019 03:08:44 -0400
 Subject: [PATCH] Introduce Async Chunk I/O
@@ -11,7 +11,7 @@ to the rest of the server as possible, whilst leveraging async chunk
 loading in places where it is most likely to help.
 
 diff --git a/src/main/java/com/canyonmodded/config/CanyonConfig.java b/src/main/java/com/canyonmodded/config/CanyonConfig.java
-index 0e5b7a19a..efaad611c 100644
+index 0e5b7a19aac264dcf84e2f3dda2e9023ef8c9ce4..efaad611c2e035697f74a481757b27a88219bded 100644
 --- a/src/main/java/com/canyonmodded/config/CanyonConfig.java
 +++ b/src/main/java/com/canyonmodded/config/CanyonConfig.java
 @@ -9,6 +9,7 @@ public class CanyonConfig {
@@ -32,7 +32,7 @@ index 0e5b7a19a..efaad611c 100644
      }
 diff --git a/src/main/java/com/canyonmodded/util/SimpleDaemonThreadFactory.java b/src/main/java/com/canyonmodded/util/SimpleDaemonThreadFactory.java
 new file mode 100644
-index 000000000..73b2f9445
+index 0000000000000000000000000000000000000000..73b2f94457df3484e2172e203fc408e3ee1349b5
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/util/SimpleDaemonThreadFactory.java
 @@ -0,0 +1,21 @@
@@ -59,7 +59,7 @@ index 000000000..73b2f9445
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 0b232fd13..7e8490779 100644
+index 0b232fd13e5b2b5fd30225da5bfed9c27cf603bb..7e84907791fe3efef2883dc77ee4be5c3e556f13 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -21,6 +21,16 @@ import org.bukkit.generator.BlockPopulator;
@@ -309,7 +309,7 @@ index 0b232fd13..7e8490779 100644
 +    // Canyon End
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index c7fa3a184..328f385fd 100644
+index c7fa3a184219906f19dbbd4b06fbe0963845522a..328f385fd8c5a65e2c2af0599a04c54627b98fcc 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1,7 +1,6 @@
@@ -337,7 +337,7 @@ index c7fa3a184..328f385fd 100644
          --this.bM;
          this.activeContainer.a();
 diff --git a/src/main/java/net/minecraft/server/NetLoginHandler.java b/src/main/java/net/minecraft/server/NetLoginHandler.java
-index 213470108..0b9be150b 100644
+index 21347010826287a15e6c4786355904d39d68251d..0b9be150b1fc6862a1af269e9a48d61ace64e0c7 100644
 --- a/src/main/java/net/minecraft/server/NetLoginHandler.java
 +++ b/src/main/java/net/minecraft/server/NetLoginHandler.java
 @@ -108,6 +108,11 @@ public class NetLoginHandler extends NetHandler implements com.canyonmodded.netw
@@ -362,7 +362,7 @@ index 213470108..0b9be150b 100644
  
          this.c = true;
 diff --git a/src/main/java/net/minecraft/server/PlayerInstance.java b/src/main/java/net/minecraft/server/PlayerInstance.java
-index 3c7706d57..d32d70db7 100644
+index 3c7706d5728331238e70ea5eeb271ec1f4734562..d32d70db700a896293bc58ccda2e923ee1888ff0 100644
 --- a/src/main/java/net/minecraft/server/PlayerInstance.java
 +++ b/src/main/java/net/minecraft/server/PlayerInstance.java
 @@ -28,7 +28,7 @@ class PlayerInstance {
@@ -375,7 +375,7 @@ index 3c7706d57..d32d70db7 100644
  
      public void a(EntityPlayer entityplayer) {
 diff --git a/src/main/java/net/minecraft/server/ServerConfigurationManager.java b/src/main/java/net/minecraft/server/ServerConfigurationManager.java
-index 981f058af..30d058a04 100644
+index 981f058af3d297d49636f117c43ac6ac62466173..30d058a049282312b1dbe0c76bd6fc8a063b017d 100644
 --- a/src/main/java/net/minecraft/server/ServerConfigurationManager.java
 +++ b/src/main/java/net/minecraft/server/ServerConfigurationManager.java
 @@ -89,7 +89,7 @@ public class ServerConfigurationManager {
@@ -449,7 +449,7 @@ index 981f058af..30d058a04 100644
      }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 0faf610eb..c51e06fb6 100644
+index 0faf610eb13ce3e37ddf522ddfa4c81dd5f32368..c51e06fb621c760210606a4933a9e386b394273f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -583,6 +583,13 @@ public class CraftWorld implements World {
@@ -466,6 +466,3 @@ index 0faf610eb..c51e06fb6 100644
      public boolean hasStorm() {
          return world.worldData.hasStorm();
      }
--- 
-2.33.0
-

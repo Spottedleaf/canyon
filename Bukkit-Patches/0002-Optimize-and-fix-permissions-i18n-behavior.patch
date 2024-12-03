@@ -1,4 +1,4 @@
-From 7dae6b82b2947e1b876b7e75ace47b76dc10270d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Fri, 23 Aug 2019 23:52:53 -0400
 Subject: [PATCH] Optimize and fix permissions i18n behavior
@@ -14,7 +14,7 @@ overloads not recompute permissions multiple times and by using a
 HashMap instead of a TreeMap (there is no need for this to be sorted).
 
 diff --git a/src/main/java/org/bukkit/permissions/PermissibleBase.java b/src/main/java/org/bukkit/permissions/PermissibleBase.java
-index 6bf0e510..3a93f2a0 100644
+index 6bf0e510141d6b34f17be896e28afea3f9716447..3a93f2a08b7754ea7945d4384a42bf59bb0a6079 100644
 --- a/src/main/java/org/bukkit/permissions/PermissibleBase.java
 +++ b/src/main/java/org/bukkit/permissions/PermissibleBase.java
 @@ -1,11 +1,6 @@
@@ -101,7 +101,7 @@ index 6bf0e510..3a93f2a0 100644
              Bukkit.getServer().getPluginManager().subscribeToPermission(name, parent);
              calculateChildPermissions(perm.getChildren(), false, null);
 diff --git a/src/main/java/org/bukkit/permissions/PermissionAttachment.java b/src/main/java/org/bukkit/permissions/PermissionAttachment.java
-index 92ba9904..6eab1854 100644
+index 92ba99046f760027d92ca15dbbbca5f0c234b289..6eab18540727e0e979090572c896e7ef51602f00 100644
 --- a/src/main/java/org/bukkit/permissions/PermissionAttachment.java
 +++ b/src/main/java/org/bukkit/permissions/PermissionAttachment.java
 @@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
@@ -158,6 +158,3 @@ index 92ba9904..6eab1854 100644
      }
  
      /**
--- 
-2.22.0
-

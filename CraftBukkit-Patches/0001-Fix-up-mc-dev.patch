@@ -1,11 +1,11 @@
-From b1ba53bedadc1abe033bed3b6a5b00cb52375cc1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Sat, 1 Jun 2019 03:06:56 -0400
 Subject: [PATCH] Fix up mc-dev
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c232801a..59358fbd 100644
+index c232801a62cf605b7c757c44ed00e2860048f4f6..59358fbd5deb235d18495ae196a285fd1a3dac29 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -146,7 +146,14 @@ public class MinecraftServer implements Runnable, ICommandListener {
@@ -34,7 +34,7 @@ index c232801a..59358fbd 100644
              log.info("Converting map!");
              convertable.convert(s, new ConvertProgressUpdater(this));
 diff --git a/src/main/java/net/minecraft/server/NextTickListEntry.java b/src/main/java/net/minecraft/server/NextTickListEntry.java
-index d67d6bd9..b461a80f 100644
+index d67d6bd914864ba3745b88d3d1d1dc462d3f82cf..b461a80f2bbcd0df3c8bf44cb5d9ecb3d594e3b7 100644
 --- a/src/main/java/net/minecraft/server/NextTickListEntry.java
 +++ b/src/main/java/net/minecraft/server/NextTickListEntry.java
 @@ -1,6 +1,6 @@
@@ -46,7 +46,7 @@ index d67d6bd9..b461a80f 100644
      private static long f = 0L;
      public int a;
 diff --git a/src/main/java/net/minecraft/server/Packet10Flying.java b/src/main/java/net/minecraft/server/Packet10Flying.java
-index 505e0ea6..7bf2f671 100644
+index 505e0ea67fb7edde2b1d719a0f77ed73b8f2dfb7..7bf2f67133bfbefaeec03b7fd979a999f471411f 100644
 --- a/src/main/java/net/minecraft/server/Packet10Flying.java
 +++ b/src/main/java/net/minecraft/server/Packet10Flying.java
 @@ -21,11 +21,11 @@ public class Packet10Flying extends Packet {
@@ -64,7 +64,7 @@ index 505e0ea6..7bf2f671 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
-index 8e49cbc4..1aca87dd 100644
+index 8e49cbc4b6580234c74695322e909c74d6cf07fd..1aca87dd01703c0c26575670848d6983ce7a82fa 100644
 --- a/src/main/java/net/minecraft/server/RegionFile.java
 +++ b/src/main/java/net/minecraft/server/RegionFile.java
 @@ -245,7 +245,7 @@ public class RegionFile {
@@ -100,7 +100,7 @@ index 8e49cbc4..1aca87dd 100644
      }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 038afed5..e5c92b7f 100644
+index 038afed5d7ca1c88933ae34252ed58eac33dcc16..e5c92b7f5e33c21a1954a787083529b004d2a914 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -483,10 +483,17 @@ public final class CraftServer implements Server {
@@ -124,6 +124,3 @@ index 038afed5..e5c92b7f 100644
  
          int dimension = 10 + console.worlds.size();
          WorldServer internal = new WorldServer(console, new ServerNBTManager(new File("."), name, true), name, dimension, seed, environment, generator);
--- 
-2.25.1
-

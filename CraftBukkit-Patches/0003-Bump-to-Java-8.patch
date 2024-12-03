@@ -1,4 +1,4 @@
-From e5c0db0abe42195a85963ca01a98d08db0e9951a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Wed, 21 Aug 2019 23:52:44 -0400
 Subject: [PATCH] Bump to Java 8
@@ -8,7 +8,7 @@ us on the path.
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Java15Compat.java b/src/main/java/org/bukkit/craftbukkit/util/Java15Compat.java
 deleted file mode 100644
-index c9c5f284..00000000
+index c9c5f284dfe040836d7d54da57b175fe0fa84475..0000000000000000000000000000000000000000
 --- a/src/main/java/org/bukkit/craftbukkit/util/Java15Compat.java
 +++ /dev/null
 @@ -1,34 +0,0 @@
@@ -47,7 +47,7 @@ index c9c5f284..00000000
 -
 -}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/LongHashset.java b/src/main/java/org/bukkit/craftbukkit/util/LongHashset.java
-index 592f3254..cb4d0fce 100644
+index 592f3254f6bcad91d38d4fb9c00b67556733f3d8..cb4d0fceec5f947fdadfe27bde2669ff8a08a0cf 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/LongHashset.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/LongHashset.java
 @@ -1,6 +1,6 @@
@@ -86,7 +86,7 @@ index 592f3254..cb4d0fce 100644
                      return ret;
                  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/LongHashtable.java b/src/main/java/org/bukkit/craftbukkit/util/LongHashtable.java
-index b438e8fa..5880e3c1 100644
+index b438e8faefb74225a6684001935a5b9382b6c5eb..5880e3c1c53d6847ca5f5dfe213123bb91ac214e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/LongHashtable.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/LongHashtable.java
 @@ -3,7 +3,7 @@ package org.bukkit.craftbukkit.util;
@@ -107,6 +107,3 @@ index b438e8fa..5880e3c1 100644
              inner[i] = new Entry(key, value);
          }
      }
--- 
-2.22.0.windows.1
-

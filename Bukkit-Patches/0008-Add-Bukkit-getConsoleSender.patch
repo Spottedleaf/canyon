@@ -1,11 +1,11 @@
-From 0b262d88eb8a65678834a42558d6c29ebfe523cd Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Fri, 13 Mar 2020 02:49:01 -0400
 Subject: [PATCH] Add Bukkit#getConsoleSender()
 
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 8438831d..040e5187 100644
+index 8438831db02175f02991b67b1d7b5195c8e3b97f..040e51873701851502fa0e4d5d124e7a13c90517 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -260,4 +260,10 @@ public final class Bukkit {
@@ -20,7 +20,7 @@ index 8438831d..040e5187 100644
 +    // Canyon end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 8b21ad20..dbea05bc 100644
+index 8b21ad20afcccfc07201b49673a0f2b18be1cf7b..dbea05bc38787629097ae747d1fddfd539730fd3 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -450,4 +450,12 @@ public interface Server {
@@ -36,6 +36,3 @@ index 8b21ad20..dbea05bc 100644
 +    org.bukkit.command.ConsoleCommandSender getConsoleSender();
 +    // Canyon end
  }
--- 
-2.26.2
-

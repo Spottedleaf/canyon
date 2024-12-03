@@ -1,4 +1,4 @@
-From c4b43e9f560626d937392a6b602f809c3336e422 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 22 Aug 2019 20:20:02 -0400
 Subject: [PATCH] Configuration file
@@ -6,7 +6,7 @@ Subject: [PATCH] Configuration file
 
 diff --git a/src/main/java/com/canyonmodded/config/CanyonConfig.java b/src/main/java/com/canyonmodded/config/CanyonConfig.java
 new file mode 100644
-index 00000000..d7dffe62
+index 0000000000000000000000000000000000000000..d7dffe62de64b3941880b774589c7e5dc2e81fea
 --- /dev/null
 +++ b/src/main/java/com/canyonmodded/config/CanyonConfig.java
 @@ -0,0 +1,18 @@
@@ -29,7 +29,7 @@ index 00000000..d7dffe62
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b2123565..4f1902fc 100644
+index adf2a7e88e0ee469201645a592f506e43a9e2d2b..ae2749fc6bbcee2b496f9ae3e6c1c933e1a8e4c3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -2,6 +2,7 @@ package org.bukkit.craftbukkit;
@@ -50,7 +50,7 @@ index b2123565..4f1902fc 100644
  
      public void loadPlugins() {
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 68b9abd2..394c6a97 100644
+index 68b9abd289ab8a9883cf17aceb1bad71af35dff4..394c6a97c1bec56a04e7c56758c6cf96cdb608d0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -92,6 +92,14 @@ public class Main {
@@ -68,6 +68,3 @@ index 68b9abd2..394c6a97 100644
                  acceptsAll(asList("nojline"), "Disables jline and emulates the vanilla console");
  
                  acceptsAll(asList("v", "version"), "Show the CraftBukkit Version");
--- 
-2.24.1.windows.2
-

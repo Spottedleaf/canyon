@@ -1,4 +1,4 @@
-From dd4b35160a8d299aa54bc3c4260543a8a1b987db Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Tue, 8 Oct 2019 19:56:55 -0400
 Subject: [PATCH] Send queued chunk packets at opportune times
@@ -6,7 +6,7 @@ Subject: [PATCH] Send queued chunk packets at opportune times
 Fixes annoying post-login/teleport lag where you can get "stuck" in stone.
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index f5aebd3eb..7cc361f52 100644
+index f5aebd3eb90ca40089c7372640376e1c437941ce..7cc361f52e8634065658d4916d82a22529b1febd 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -103,6 +103,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -26,7 +26,7 @@ index f5aebd3eb..7cc361f52 100644
              // Canyon start - rewrote logic and moved elsewhere
              this.sendQueuedChunks();
 diff --git a/src/main/java/net/minecraft/server/NetLoginHandler.java b/src/main/java/net/minecraft/server/NetLoginHandler.java
-index 0b9be150b..bfb75d451 100644
+index 0b9be150b1fc6862a1af269e9a48d61ace64e0c7..bfb75d451e8c152a1abcdbc7deee8ab250a9e820 100644
 --- a/src/main/java/net/minecraft/server/NetLoginHandler.java
 +++ b/src/main/java/net/minecraft/server/NetLoginHandler.java
 @@ -124,6 +124,7 @@ public class NetLoginHandler extends NetHandler implements com.canyonmodded.netw
@@ -38,7 +38,7 @@ index 0b9be150b..bfb75d451 100644
              // Canyon End
          }
 diff --git a/src/main/java/net/minecraft/server/ServerConfigurationManager.java b/src/main/java/net/minecraft/server/ServerConfigurationManager.java
-index 30d058a04..7ab9e2754 100644
+index 30d058a049282312b1dbe0c76bd6fc8a063b017d..7ab9e27543324881154923e1e667757121fd8f10 100644
 --- a/src/main/java/net/minecraft/server/ServerConfigurationManager.java
 +++ b/src/main/java/net/minecraft/server/ServerConfigurationManager.java
 @@ -132,6 +132,7 @@ public class ServerConfigurationManager {
@@ -56,6 +56,3 @@ index 30d058a04..7ab9e2754 100644
 +        server.queueTask(() -> entityplayer.a(true)); // Canyon - update chunks on respawn
      }
  }
--- 
-2.33.0
-

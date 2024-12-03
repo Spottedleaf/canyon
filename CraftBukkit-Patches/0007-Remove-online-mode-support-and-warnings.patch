@@ -1,11 +1,11 @@
-From 7d83aa12bf6ad9c48471841aaa23b5916ad6a84f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Mon, 11 Sep 2023 03:54:28 -0400
 Subject: [PATCH] Remove online-mode support and warnings
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index af953dd7..2defb1b3 100644
+index af953dd7167505bfdcb11f204bccc590f89161dc..2defb1b3e936fa77f3a66edd1a0aac0698c6d815 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -181,7 +181,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
@@ -26,6 +26,3 @@ index af953dd7..2defb1b3 100644
              log.warning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
              log.warning("The server will make no attempt to authenticate usernames. Beware.");
              log.warning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
--- 
-2.43.0.windows.1
-

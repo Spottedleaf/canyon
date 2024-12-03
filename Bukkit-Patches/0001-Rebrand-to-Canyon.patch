@@ -1,11 +1,25 @@
-From bf37c8a0ba23df1af5630f5152d50ed184e3faf0 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Fri, 23 Aug 2019 23:38:14 -0400
 Subject: [PATCH] Rebrand to Canyon
 
 
+diff --git a/.gitignore b/.gitignore
+index fd88ec96384e50a82845f3e4954b86a8ef3ff945..5665e53a85cfc12be651d257b4427311432f8ef4 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -28,4 +28,6 @@
+ *.iml
+ *.ipr
+ *.iws
+-.idea/
+\ No newline at end of file
++.idea/
++
++dependency-reduced-pom.xml
+\ No newline at end of file
 diff --git a/pom.xml b/pom.xml
-index 7e841f0b..d93fa53b 100644
+index 7e841f0ba8152a60bd5a6e5c5ed68abe9dcd5ccb..942d71b310aed96091ed65b9db8262f4deb7e58e 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,9 +1,14 @@
@@ -32,22 +46,137 @@ index 7e841f0b..d93fa53b 100644
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-compiler-plugin</artifactId>
 -                <version>2.0.2</version>
-+                <version>3.8.1</version>
++                <version>3.13.0</version>
                  <configuration>
 -                    <source>1.5</source>
 -                    <target>1.5</target>
-+                    <source>1.8</source>
-+                    <target>1.8</target>
++                    <source>21</source>
++                    <target>21</target>
                  </configuration>
              </plugin>
              <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-shade-plugin</artifactId>
 -                <version>1.4</version>
-+                <version>3.2.1</version>
++                <version>3.6.0</version>
                  <executions>
                      <execution>
                          <phase>package</phase>
--- 
-2.22.0.windows.1
-
+@@ -50,39 +55,39 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-site-plugin</artifactId>
+-                <version>3.0-beta-3</version>
++                <version>3.21.0</version>
++            </plugin>
++        </plugins>
++    </build>
++    <reporting>
++        <plugins>
++            <plugin>
++                <groupId>org.codehaus.mojo</groupId>
++                <artifactId>jxr-maven-plugin</artifactId>
++                <version>2.0-beta-1</version>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-javadoc-plugin</artifactId>
++                <version>2.7</version>
+                 <configuration>
+-                    <reportPlugins>
+-                        <plugin>
+-                            <groupId>org.codehaus.mojo</groupId>
+-                            <artifactId>jxr-maven-plugin</artifactId>
+-                            <version>2.0-beta-1</version>
+-                        </plugin>
+-                        <plugin>
+-                            <groupId>org.apache.maven.plugins</groupId>
+-                            <artifactId>maven-javadoc-plugin</artifactId>
+-                            <version>2.7</version>
+-                            <configuration>
+-                                <linksource>true</linksource>
+-                            </configuration>
+-                            <reportSets>
+-                                <reportSet>
+-                                    <reports>
+-                                        <report>javadoc</report>
+-                                    </reports>
+-                                </reportSet>
+-                            </reportSets>
+-                        </plugin>
+-                    </reportPlugins>
++                    <linksource>true</linksource>
+                 </configuration>
++                <reportSets>
++                    <reportSet>
++                        <reports>
++                            <report>javadoc</report>
++                        </reports>
++                    </reportSet>
++                </reportSets>
+             </plugin>
+         </plugins>
+-    </build>
++    </reporting>
+     <dependencies>
+         <dependency>
+             <groupId>org.yaml</groupId>
+             <artifactId>snakeyaml</artifactId>
+-            <version>1.7</version>
++            <version>2.3</version>
+             <type>jar</type>
+             <scope>compile</scope>
+         </dependency>
+diff --git a/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java b/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
+index 4d61c61393c511425f05512305cf4f5c1007d74e..30b3868971ad80c9de304159c30bbbeb8c0f556d 100644
+--- a/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
++++ b/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
+@@ -10,6 +10,7 @@ import java.util.Set;
+ import java.util.logging.Level;
+ import org.bukkit.Bukkit;
+ import org.bukkit.permissions.Permission;
++import org.yaml.snakeyaml.LoaderOptions;
+ import org.yaml.snakeyaml.Yaml;
+ import org.yaml.snakeyaml.constructor.SafeConstructor;
+ 
+@@ -17,7 +18,7 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
+  * Provides access to a Plugins description file, plugin.yaml
+  */
+ public final class PluginDescriptionFile {
+-    private static final Yaml yaml = new Yaml(new SafeConstructor());
++    private static final Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions()));
+     private String name = null;
+     private String main = null;
+     private ArrayList<String> depend = null;
+diff --git a/src/main/java/org/bukkit/util/config/Configuration.java b/src/main/java/org/bukkit/util/config/Configuration.java
+index 81226c3f7c40edfc7fbf25c322feea61f37baf75..8ee1b94b84f921424d623f614a1d7876376d2969 100644
+--- a/src/main/java/org/bukkit/util/config/Configuration.java
++++ b/src/main/java/org/bukkit/util/config/Configuration.java
+@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
+ import java.util.HashMap;
+ import java.util.Map;
+ import org.yaml.snakeyaml.DumperOptions;
++import org.yaml.snakeyaml.LoaderOptions;
+ import org.yaml.snakeyaml.Yaml;
+ import org.yaml.snakeyaml.constructor.SafeConstructor;
+ import org.yaml.snakeyaml.introspector.Property;
+@@ -66,7 +67,7 @@ public class Configuration extends ConfigurationNode {
+         options.setIndent(4);
+         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+ 
+-        yaml = new Yaml(new SafeConstructor(), new EmptyNullRepresenter(), options);
++        yaml = new Yaml(new SafeConstructor(new LoaderOptions()), new EmptyNullRepresenter(options), options);
+ 
+         this.file = file;
+     }
+@@ -193,8 +194,8 @@ public class Configuration extends ConfigurationNode {
+ 
+ class EmptyNullRepresenter extends Representer {
+ 
+-    public EmptyNullRepresenter() {
+-        super();
++    public EmptyNullRepresenter(DumperOptions options) {
++        super(options);
+         this.nullRepresenter = new EmptyRepresentNull();
+     }
+ 

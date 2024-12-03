@@ -1,11 +1,11 @@
-From 9037fceac1b922d31acb7883003d58f8c60ce937 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Fri, 23 Aug 2019 23:32:54 -0400
 Subject: [PATCH] Shared random for all entities
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 37dc9f8f..7aa912c0 100644
+index 37dc9f8f74d14edd00d71df0517c61f667782f13..7aa912c0040e62ccb78236ae841d5d50fbeb921d 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -22,6 +22,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
@@ -25,6 +25,3 @@ index 37dc9f8f..7aa912c0 100644
          this.ticksLived = 0;
          this.maxFireTicks = 1;
          this.fireTicks = 0;
--- 
-2.26.2
-

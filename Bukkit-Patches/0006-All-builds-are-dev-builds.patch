@@ -1,11 +1,11 @@
-From aba081238415cf0b03d76adb364fbf72e5528e5b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 12 Mar 2020 20:40:58 -0400
 Subject: [PATCH] All builds are dev builds
 
 
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index bb804a19..d780cfc9 100644
+index bb804a195616dc8f182d0b70fd8f24b18cd77195..d780cfc964fce96b7101a2fc32fbb2e81ffcf710 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -25,7 +25,7 @@ public class VersionCommand extends Command {
@@ -17,6 +17,3 @@ index bb804a19..d780cfc9 100644
          } else {
              StringBuilder name = new StringBuilder();
  
--- 
-2.26.2
-

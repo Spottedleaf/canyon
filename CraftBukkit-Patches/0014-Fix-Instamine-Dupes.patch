@@ -1,11 +1,11 @@
-From f4f8fb9237797044afdb473ea45097382fb1ecca Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: RhysB <jetpackingwolf@gmail.com>
 Date: Sat, 5 Oct 2019 18:04:26 +1000
 Subject: [PATCH] Fix Instamine Dupes
 
 
 diff --git a/src/main/java/net/minecraft/server/BlockChest.java b/src/main/java/net/minecraft/server/BlockChest.java
-index 220495cb6..a4879897c 100644
+index 220495cb6cbf5f2b0b41f9c9e477db5205263751..a4879897cf96f62ae85e7fcc9204737f319cc9a3 100644
 --- a/src/main/java/net/minecraft/server/BlockChest.java
 +++ b/src/main/java/net/minecraft/server/BlockChest.java
 @@ -68,6 +68,7 @@ public class BlockChest extends BlockContainer {
@@ -17,7 +17,7 @@ index 220495cb6..a4879897c 100644
          }
  
 diff --git a/src/main/java/net/minecraft/server/BlockDispenser.java b/src/main/java/net/minecraft/server/BlockDispenser.java
-index 89975dd8d..ff8348423 100644
+index 89975dd8d29e472d54b4c5d6d4e8b07b2469e6ea..ff83484230284007a2aa2e3619502617fc96c3e1 100644
 --- a/src/main/java/net/minecraft/server/BlockDispenser.java
 +++ b/src/main/java/net/minecraft/server/BlockDispenser.java
 @@ -239,6 +239,7 @@ public class BlockDispenser extends BlockContainer {
@@ -29,7 +29,7 @@ index 89975dd8d..ff8348423 100644
          }
  
 diff --git a/src/main/java/net/minecraft/server/BlockFurnace.java b/src/main/java/net/minecraft/server/BlockFurnace.java
-index ab9f6bd96..6b003e3d4 100644
+index ab9f6bd960193a04ac7ca0244aacfcb95471fd53..6b003e3d43280a16017003469305233453941563 100644
 --- a/src/main/java/net/minecraft/server/BlockFurnace.java
 +++ b/src/main/java/net/minecraft/server/BlockFurnace.java
 @@ -137,6 +137,7 @@ public class BlockFurnace extends BlockContainer {
@@ -41,7 +41,7 @@ index ab9f6bd96..6b003e3d4 100644
              }
          }
 diff --git a/src/main/java/net/minecraft/server/EntityMinecart.java b/src/main/java/net/minecraft/server/EntityMinecart.java
-index 60e1bdf01..32c583fa2 100644
+index 60e1bdf01a8e3877c9497e8388cd2e9e85f6b441..32c583fa27331de3aff5d2e77ec091504ee57bcf 100644
 --- a/src/main/java/net/minecraft/server/EntityMinecart.java
 +++ b/src/main/java/net/minecraft/server/EntityMinecart.java
 @@ -160,6 +160,7 @@ public class EntityMinecart extends Entity implements IInventory {
@@ -52,6 +52,3 @@ index 60e1bdf01..32c583fa2 100644
                          }
                      }
  
--- 
-2.33.0
-

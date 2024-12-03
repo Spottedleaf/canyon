@@ -1,4 +1,4 @@
-From e606cb08b573fc4f0c4942caac3286778327aaad Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Thu, 22 Aug 2019 00:38:54 -0400
 Subject: [PATCH] Backport: Improve server tick loop and implement tps api
@@ -13,7 +13,7 @@ allows Canyon to keep track of server TPS, which can be viewed with the
 /tps command.
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 59358fbd..af953dd7 100644
+index 59358fbd5deb235d18495ae196a285fd1a3dac29..af953dd7167505bfdcb11f204bccc590f89161dc 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -63,6 +63,87 @@ public class MinecraftServer implements Runnable, ICommandListener {
@@ -259,7 +259,7 @@ index 59358fbd..af953dd7 100644
                  while (this.isRunning) {
                      this.b();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e7e3ccf7..2e84a5ff 100644
+index 93f7f1f19d28961b469d8aed0825ef7c530f1122..adf2a7e88e0ee469201645a592f506e43a9e2d2b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1,6 +1,7 @@
@@ -284,6 +284,3 @@ index e7e3ccf7..2e84a5ff 100644
      public void setWhitelist(boolean value) {
          server.o = value;
          console.propertyManager.b("white-list", value);
--- 
-2.43.0.windows.1
-

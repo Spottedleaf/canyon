@@ -1,4 +1,4 @@
-From f5e8af0db06584207011a6bbe99a0b884118f551 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Andrew Steinborn <git@steinborn.me>
 Date: Fri, 13 Mar 2020 01:19:14 -0400
 Subject: [PATCH] Add async chunk loading API
@@ -7,7 +7,7 @@ Mostly compatible with the Paper API, except generation can not
 be triggered.
 
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index c8f5ea5c..50063fd8 100644
+index c8f5ea5c62d15e16b984ff0cb9f53444f9a3716e..50063fd801d9762a4fd799a870cd53b23748a213 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
 @@ -728,6 +728,260 @@ public interface World {
@@ -272,7 +272,7 @@ index c8f5ea5c..50063fd8 100644
  
      /**
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index 6ae2a782..224452d2 100644
+index 6ae2a782be0b0ca6079eab2c001855c59d7e74cc..224452d2102c5d9fdb577428361d1659a89a26db 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -58,6 +58,19 @@ public interface Entity {
@@ -295,6 +295,3 @@ index 6ae2a782..224452d2 100644
      /**
       * Returns a list of entities within a bounding box defined by x,y,z centered around player
       *
--- 
-2.26.2
-
