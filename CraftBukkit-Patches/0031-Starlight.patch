@@ -9,10 +9,10 @@ which is ported from https://github.com/PaperMC/Starlight
 
 diff --git a/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2fb8707b2
+index 0000000000000000000000000000000000000000..e3b3573573496c589f10bbb6efe811bf23c598f4
 --- /dev/null
 +++ b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
-@@ -0,0 +1,692 @@
+@@ -0,0 +1,698 @@
 +package ca.spottedleaf.starlight;
 +
 +import net.minecraft.server.Block;
@@ -199,6 +199,17 @@ index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2
 +    }
 +
 +    protected final void destroyCaches() {
++        for (final Chunk chunk : this.chunkCache) {
++            final NibbleArray sky = chunk.getSkylight();
++            final NibbleArray block = chunk.getBlockLight();
++
++            if (sky.isDirty() || block.isDirty()) {
++                sky.setDirty(false);
++                block.setDirty(false);
++
++                chunk.setDirty();
++            }
++        }
 +        Arrays.fill(this.chunkCache, null);
 +    }
 +
@@ -543,8 +554,6 @@ index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2
 +            return startY;
 +        }
 +
-+        int above = this.getBlockState(worldX, startY + 1, worldZ);
-+
 +        for (;startY >= 0; --startY) {
 +            int current = this.getBlockState(worldX, startY, worldZ);
 +
@@ -563,8 +572,6 @@ index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2
 +                            | (15L << (6 + 6 + 16)) // we know we're at full lit here
 +                            | (propagateDirection << (6 + 6 + 16 + 4))
 +            );
-+
-+            above = current;
 +
 +            this.setLightLevel(worldX, startY, worldZ, 15);
 +        }
@@ -603,9 +610,9 @@ index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2
 +                final NibbleArray nibble = this.getNibbleFromCache(chunkX, chunkZ);
 +                final int encodeOffset = this.coordinateOffset;
 +
-+                for (int y = 0; y <= 127; ++y) {
++                for (int x = 0; x <= 15; ++x) {
 +                    for (int z = 0; z <= 15; ++z) {
-+                        for (int x = 0; x <= 15; ++x) {
++                        for (int y = 0; y <= 127; ++y) {
 +                            final int blockState = chunk.getTypeId(x, y, z);
 +                            if (blockState == AIR_BLOCK_STATE) {
 +                                continue;
@@ -635,7 +642,6 @@ index 0000000000000000000000000000000000000000..3e47665c36607d674214a851e8a3d6f2
 +    }
 +
 +    protected final void propagateNeighbourLevels(final int chunkX, final int chunkZ) {
-+        final NibbleArray currentNibble = this.getNibbleFromCache(chunkX, chunkZ);
 +        for (int currSectionY = (127 >> 4); currSectionY >= 0; --currSectionY) {
 +            for (final AxisDirection direction : ONLY_HORIZONTAL_DIRECTIONS) {
 +                final int neighbourOffX = direction.x;
@@ -723,7 +729,7 @@ index 8183374e2eb0523e0096d2162689d14cfee3bf23..855081560e443a61068f16cb9f329bfc
      public static final Block STONE = (new BlockStone(1, 1)).c(1.5F).b(10.0F).a(h).a("stone");
      public static final BlockGrass GRASS = (BlockGrass) (new BlockGrass(2)).c(0.6F).a(g).a("grass");
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index bd6f9f1fb0492df251fecb1afccf2dfc0cfc28cc..b26174455610064617989aa9a8aca956db1601a3 100644
+index bd6f9f1fb0492df251fecb1afccf2dfc0cfc28cc..6556da2111a3c56dd59acf38aeb125d9afdac4d9 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -14,8 +14,8 @@ public class Chunk {
@@ -867,6 +873,14 @@ index bd6f9f1fb0492df251fecb1afccf2dfc0cfc28cc..b26174455610064617989aa9a8aca956
              if (l != 0 && !this.world.isStatic) {
                  Block.byId[l].c(this.world, k1, j, l1);
              }
+@@ -502,6 +467,7 @@ public class Chunk {
+         }
+     }
+ 
++    public final void setDirty() { this.f(); } // Canyon - OBFHELPER
+     public void f() {
+         this.o = true;
+     }
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 index a343744b04818965733e1972acf7f60609474873..00ea83c32ae8f6f08f8890079f8a916a02c52d38 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
@@ -888,10 +902,28 @@ index a343744b04818965733e1972acf7f60609474873..00ea83c32ae8f6f08f8890079f8a916a
  
              // CraftBukkit start
 diff --git a/src/main/java/net/minecraft/server/NibbleArray.java b/src/main/java/net/minecraft/server/NibbleArray.java
-index 186e8961d9d9fac009e5275b481da11b03511489..8e89d17ff56c73b2f8331241361ed8aa3a3cea0f 100644
+index 186e8961d9d9fac009e5275b481da11b03511489..3d250ea9ba982487f5f00bb20ade00231c1b728d 100644
 --- a/src/main/java/net/minecraft/server/NibbleArray.java
 +++ b/src/main/java/net/minecraft/server/NibbleArray.java
-@@ -12,24 +12,25 @@ public class NibbleArray {
+@@ -4,6 +4,17 @@ public class NibbleArray {
+ 
+     public final byte[] a;
+ 
++    private boolean dirty = false;
++    // Canyon start - starlight
++    public boolean isDirty() {
++        return this.dirty;
++    }
++
++    public void setDirty(final boolean dirty) {
++        this.dirty = dirty;
++    }
++    // Canyon end - starlight
++
+     public NibbleArray(int i) {
+         this.a = new byte[i >> 1];
+     }
+@@ -12,24 +23,26 @@ public class NibbleArray {
          this.a = abyte;
      }
  
@@ -899,13 +931,12 @@ index 186e8961d9d9fac009e5275b481da11b03511489..8e89d17ff56c73b2f8331241361ed8aa
 -        int l = i << 11 | k << 7 | j;
 -        int i1 = l >> 1;
 -        int j1 = l & 1;
--
--        return j1 == 0 ? this.a[i1] & 15 : this.a[i1] >> 4 & 15;
 +    public final int get(int x, int y, int z) { return this.a(x, y, z); } // Canyon - OBFHELPER
 +    public int a(int x, int y, int z) { // Canyon start - starlight
 +        int index = x << 11 | z << 7 | y;
 +        final byte value = this.a[index >>> 1];
-+
+ 
+-        return j1 == 0 ? this.a[i1] & 15 : this.a[i1] >> 4 & 15;
 +        // if we are an even index, we want lower 4 bits
 +        // if we are an odd index, we want upper 4 bits
 +        return ((value >>> ((index & 1) << 2)) & 0xF);
@@ -928,6 +959,7 @@ index 186e8961d9d9fac009e5275b481da11b03511489..8e89d17ff56c73b2f8331241361ed8aa
 -            this.a[j1] = (byte) (this.a[j1] & 15 | (l & 15) << 4);
 -        }
 +        this.a[i] = (byte)((this.a[i] & (0xF0 >>> shift)) | (value << shift));
++        this.dirty = true;
 +        // Canyon end - starlight
      }
  

@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Spottedleaf <Spottedleaf@users.noreply.github.com>
+Date: Mon, 2 Dec 2024 21:10:21 -0800
+Subject: [PATCH] fixup! Starlight
+
+
+diff --git a/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
+index e3b3573573496c589f10bbb6efe811bf23c598f4..4bb247ab94c01ce99d38c46e8344c4ecbb49a864 100644
+--- a/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
++++ b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
+@@ -185,6 +185,10 @@ public class StarlightEngine {
+ 
+     protected final void destroyCaches() {
+         for (final Chunk chunk : this.chunkCache) {
++            if (chunk == null) {
++                continue;
++            }
++
+             final NibbleArray sky = chunk.getSkylight();
+             final NibbleArray block = chunk.getBlockLight();
+ 
