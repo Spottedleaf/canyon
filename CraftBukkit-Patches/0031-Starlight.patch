@@ -9,10 +9,10 @@ which is ported from https://github.com/PaperMC/Starlight
 
 diff --git a/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..e3b3573573496c589f10bbb6efe811bf23c598f4
+index 0000000000000000000000000000000000000000..4bb247ab94c01ce99d38c46e8344c4ecbb49a864
 --- /dev/null
 +++ b/src/main/java/ca/spottedleaf/starlight/StarlightEngine.java
-@@ -0,0 +1,698 @@
+@@ -0,0 +1,702 @@
 +package ca.spottedleaf.starlight;
 +
 +import net.minecraft.server.Block;
@@ -200,6 +200,10 @@ index 0000000000000000000000000000000000000000..e3b3573573496c589f10bbb6efe811bf
 +
 +    protected final void destroyCaches() {
 +        for (final Chunk chunk : this.chunkCache) {
++            if (chunk == null) {
++                continue;
++            }
++
 +            final NibbleArray sky = chunk.getSkylight();
 +            final NibbleArray block = chunk.getBlockLight();
 +
